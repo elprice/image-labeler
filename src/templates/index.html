@@ -5,16 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <script src="https://unpkg.com/htmx.org@1.9.10"
-        integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
-        crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
+        integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
     <style>
         img {
             min-width: 300px;
             min-height: 200px;
             max-width: 300px;
             max-height: 200px;
+        }
+
+        button {
+            margin-right: 5px;
         }
     </style>
 </head>
@@ -25,9 +27,10 @@
         <img src="{{ img_url }}" {% if not loop.first %}style="display:none;" {% endif %}></img>
         {% endfor %}
     </div>
-    <button id="prev" onclick="changeImage(-1)">Previous</button>
-    <button id="next" onclick="changeImage(1)">Next</button>
-    <div id="error"></div>
+    <button id="prev" class="pure-button pure-button-primary" onclick="changeImage(-1)"
+        disabled>Previous</button><button id="next" class="pure-button pure-button-primary"
+        onclick="changeImage(1)">Next</button>
+
 </body>
 <script>
     function changeImage(direction) {
@@ -35,11 +38,18 @@
         for (var i = 0; i < imgs.length; i++) {
             if (imgs[i].checkVisibility()) {
                 if (imgs[i + direction]) {
-                    document.getElementById("error").innerText = ""
                     imgs[i].style.display = "none";
                     imgs[i + direction].style.display = "inline";
-                } else {
-                    document.getElementById("error").innerText = "can't do that"
+                    if (i + direction == imgs.length - 1) {
+                        document.getElementById("next").disabled = true;
+                    } else {
+                        document.getElementById("next").disabled = false;
+                    }
+                    if (i + direction > 0) {
+                        document.getElementById("prev").disabled = false;
+                    } else {
+                        document.getElementById("prev").disabled = true;
+                    }
                 }
                 break
             }
