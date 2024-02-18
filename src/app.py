@@ -1,3 +1,4 @@
+import base64
 import logging
 import os
 
@@ -29,12 +30,20 @@ def index(image):
     ]
     image_urls = [url_for("static", filename=f"{IMAGE_DIR}/{f}") for f in images]
     if not image:
-        data["current"] = image_urls[0]
+        f = open(f"S:\image-viewer\src\static\images\images.jpg", "rb").read()
+        b = bytearray(f)
+
+        base64_encoded_image = base64.b64encode(b).decode("utf-8")
+        data["current"] = base64_encoded_image
         data["next"] = image_urls[1]
     else:
         logging.info(images)
         idx = images.index(image)
-        data["current"] = image_urls[idx]
+        f = open(f"S:\image-viewer\src\static\images\{image}", "rb").read()
+        b = bytearray(f)
+
+        base64_encoded_image = base64.b64encode(b).decode("utf-8")
+        data["current"] = base64_encoded_image
         if idx - 1 >= 0:
             data["prev"] = image_urls[idx - 1]
         if idx + 1 < len(images):

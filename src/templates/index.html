@@ -5,9 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <script src="https://unpkg.com/htmx.org@1.9.10"
+        integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+        crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <style>
         img {
+            min-width: 300px;
+            min-height: 200px;
             max-width: 300px;
             max-height: 200px;
         }
@@ -16,13 +21,15 @@
 
 <body>
     <div>
-        <img src="{{ data.current }}"></img>
+        <img id="image-in-review" src=" data:image/jpeg;charset=utf-8;base64, {{ data.current }}"></img>
     </div>
     {% if 'prev' in data %}
-    <button id="prev" onclick="window.location.href='/?image={{data.prev.split('/')[-1]}}'">Previous</button>
+    <button id="prev" hx-get="/?image={{data.prev.split('/')[-1]}}" hx-trigger="click" hx-target="body"
+        hx-swap="innerHTML settle:0s">Previous</button>
     {% endif %}
     {% if 'next' in data %}
-    <button id="next" onclick="window.location.href='/?image={{data.next.split('/')[-1]}}'">Next</button>
+    <button id="next" hx-get="/?image={{data.next.split('/')[-1]}}" hx-trigger="click" hx-target="body"
+        hx-swap="innerHTML settle:0s">Next</button>
     {% endif %}
 </body>
 
