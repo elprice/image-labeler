@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <style>
         img {
@@ -18,10 +19,10 @@
         <img src="{{ data.current }}"></img>
     </div>
     {% if 'prev' in data %}
-    <button id="prev" onclick="window.location.href='/{{data.prev.split('/')[-1]}}'">Previous</button>
+    <button id="prev" onclick="window.location.href='/?image={{data.prev.split('/')[-1]}}'">Previous</button>
     {% endif %}
     {% if 'next' in data %}
-    <button id="next" onclick="window.location.href='/{{data.next.split('/')[-1]}}'">Next</button>
+    <button id="next" onclick="window.location.href='/?image={{data.next.split('/')[-1]}}'">Next</button>
     {% endif %}
 </body>
 

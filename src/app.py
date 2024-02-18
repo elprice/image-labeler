@@ -1,7 +1,7 @@
 import logging
 import os
 
-from flask import Flask, jsonify, render_template, url_for
+from flask import Flask, jsonify, render_template, url_for, request
 
 app = Flask(__name__)
 
@@ -10,8 +10,8 @@ IMAGE_DIR = "images"
 
 
 @app.route("/", defaults={"image": None})
-@app.route("/<image>")
 def index(image):
+    image = request.args.get('image')
     # Get a list of image filenames
     # images_path = os.path.join(os.getcwd(), IMAGE_DIR)
     # images = [
@@ -53,6 +53,5 @@ def get_image_info(image_name):
     }
     return jsonify(image_info)
 
-
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, threaded=True)
