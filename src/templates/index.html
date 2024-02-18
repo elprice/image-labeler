@@ -21,16 +21,30 @@
 
 <body>
     <div>
-        <img id="image-in-review" src=" data:image/jpeg;charset=utf-8;base64, {{ data.current }}"></img>
+        {% for img_url in image_urls %}
+        <img src="{{ img_url }}" {% if not loop.first %}style="display:none;" {% endif %}></img>
+        {% endfor %}
     </div>
-    {% if 'prev' in data %}
-    <button id="prev" hx-get="/?image={{data.prev.split('/')[-1]}}" hx-trigger="click" hx-target="body"
-        hx-swap="innerHTML settle:0s">Previous</button>
-    {% endif %}
-    {% if 'next' in data %}
-    <button id="next" hx-get="/?image={{data.next.split('/')[-1]}}" hx-trigger="click" hx-target="body"
-        hx-swap="innerHTML settle:0s">Next</button>
-    {% endif %}
+    <button id="prev" onclick="changeImage(-1)">Previous</button>
+    <button id="next" onclick="changeImage(1)">Next</button>
+    <div id="error"></div>
 </body>
+<script>
+    function changeImage(direction) {
+        var imgs = document.getElementsByTagName("img");
+        for (var i = 0; i < imgs.length; i++) {
+            if (imgs[i].checkVisibility()) {
+                if (imgs[i + direction]) {
+                    document.getElementById("error").innerText = ""
+                    imgs[i].style.display = "none";
+                    imgs[i + direction].style.display = "inline";
+                } else {
+                    document.getElementById("error").innerText = "can't do that"
+                }
+                break
+            }
+        }
+    }
+</script>
 
 </html>
