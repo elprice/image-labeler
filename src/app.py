@@ -1,3 +1,5 @@
+import json
+import logging
 import os
 
 from flask import Flask, jsonify, render_template, url_for
@@ -5,23 +7,30 @@ from flask import Flask, jsonify, render_template, url_for
 app = Flask(__name__)
 
 IMAGE_DIR = "images"
+RESOURCE_DIR = "resource"
 
 
 @app.route("/")
 def index():
+    data = {}
     images = [
         f
         for f in os.listdir(os.path.join(app.static_folder, "images"))
         if f.endswith((".jpg", ".png", ".jpeg"))
     ]
-    print(images)
-    url_for("static", filename=f"{IMAGE_DIR}/{images[0]}")
-    url_for("static", filename=f"{IMAGE_DIR}/{images[1]}")
-
-    url_for("static", filename=f"{IMAGE_DIR}/{images[2]}")
-
     image_urls = [url_for("static", filename=f"{IMAGE_DIR}/{f}") for f in images]
-    return render_template("index.html", image_urls=image_urls)
+    data["image_urls"] = image_urls
+    data["categories"] = categories()
+    return render_template("index.html", data=data)
+
+
+@app.route("/get-categories")
+def categories():
+    # TODO needs to select the one that has been set in file.. not first in html
+    with app.open_resource(f"{RESOURCE_DIR}/categories.json") as f:
+        categories = json.loads(f.read())
+        # logging.info(categories)
+    return categories
 
 
 @app.route("/get_image_info/<image_name>")

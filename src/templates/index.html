@@ -7,12 +7,17 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
         integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <style>
-        img {
+        /*img {
             min-width: 300px;
             min-height: 200px;
             max-width: 300px;
             max-height: 200px;
+        }*/
+        input[type="radio"] {
+            margin-top: -2px;
+            vertical-align: middle;
         }
 
         button {
@@ -22,15 +27,30 @@
 </head>
 
 <body>
-    <div>
-        {% for img_url in image_urls %}
-        <img src="{{ img_url }}" {% if not loop.first %}style="display:none;" {% endif %}></img>
-        {% endfor %}
+    <div class="pure-g">
+        <div class="pure-u-1-7" style="margin-left:20px; margin-top:20px">
+            {% for img_url in data.image_urls %}
+            <img src="{{ img_url }}" {% if not loop.first %}style="display:none;" {% endif %}></img>
+            {% endfor %}
+        </div>
+        <div class="pure-u-1-16" style="margin-left: 10px; margin-top:20px">
+            <form id="categories" class="pure-form">
+                <legend>Categories</legend>
+                {% for category in data.categories %}
+                <label class="pure-radio">
+                    <input type="radio" name="category" value="{{ category }}" style="vertical-align: center;" {% if
+                        loop.first %}checked{% endif %}><span
+                        style="margin-left:4px;vertical-align: center;">{{category}}</span>
+                </label>
+                {% endfor %}
+            </form>
+        </div>
     </div>
-    <button id="prev" class="pure-button pure-button-primary" onclick="changeImage(-1)"
-        disabled>Previous</button><button id="next" class="pure-button pure-button-primary"
-        onclick="changeImage(1)">Next</button>
-
+    <div style="margin-left:20px;">
+        <button id="prev" class="pure-button pure-button-primary" onclick="changeImage(-1)"
+            disabled>Previous</button><button id="next" class="pure-button pure-button-primary"
+            onclick="changeImage(1)">Next</button>
+    </div>
 </body>
 <script>
     function changeImage(direction) {
@@ -55,6 +75,58 @@
             }
         }
     }
+    function changeSelection(direction) {
+        var selected = document.querySelectorAll("input[type='radio']:checked");
+        var parent = selected[0].parentNode;
+
+        switch (direction) {
+            case -1:
+                if (parent.previousElementSibling.nodeName != "LEGEND") {
+                    parent.previousElementSibling.querySelector("input[type='radio']").checked = true;
+                } else {
+                    var current = parent;
+                    while (current.nextElementSibling) {
+                        current = current.nextElementSibling;
+                    }
+                    current.querySelector("input[type='radio']").checked = true;
+                }
+                break;
+            case 1:
+                if (parent.nextElementSibling) {
+                    parent.nextElementSibling.querySelector("input[type='radio']").checked = true;
+                } else {
+                    var current = parent;
+                    while (current.previousElementSibling && current.previousElementSibling.nodeName != "LEGEND") {
+                        current = current.previousElementSibling;
+                    }
+                    current.querySelector("input[type='radio']").checked = true;
+                }
+                break;
+        }
+
+    }
+
+    document.onkeydown = function (e) {
+        e = e || window.event;
+        switch (e.which || e.keyCode) {
+            case 37:
+                document.getElementById("prev").click();
+                break;
+            case 39:
+                document.getElementById("next").click();
+                break;
+            case 38:
+                changeSelection(-1);
+                break;
+            case 40:
+                changeSelection(1);
+                break;
+            default:
+                break;
+        }
+        e.preventDefault();
+    }
+
 </script>
 
 </html>
