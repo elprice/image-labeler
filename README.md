@@ -1,3 +1,3 @@
-# image-viewer
+# image-labeler
 
 Describe your project here.
