@@ -29,14 +29,14 @@
 <body>
     {% for img_url in data.image_urls %}
     <div class="pure-g" {% if not loop.first %}style="display:none;" {% endif %}>
-        
+
         <div class="pure-u-1-7" style="margin-left:20px; margin-top:20px">
             <img src="{{ img_url }}"></img>
         </div>
         <div class="pure-u-*" style="margin-left: 10px; margin-top:20px">
-            <form id="categories" class="pure-form">
-                <legend>Categories</legend>
-                {% for category in data.categories %}
+            <form id="labels" class="pure-form">
+                <legend>Labels</legend>
+                {% for category in data.labels.types %}
                 <label class="pure-radio">
                     <input type="radio" name="category" value="{{ category }}" style="vertical-align: center;" {% if
                         loop.first %}checked{% endif %}><span
@@ -77,8 +77,8 @@
         }
     }
     function changeSelection(direction) {
-        
-        var selected =  $("input[type='radio']:visible:checked");
+
+        var selected = $("input[type='radio']:visible:checked");
         var parent = selected[0].parentNode;
 
         switch (direction) {

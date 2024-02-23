@@ -8,6 +8,8 @@ app = Flask(__name__)
 IMAGE_DIR = "images"
 RESOURCE_DIR = "resource"
 
+LABELS_FILENAME = "labels.json"
+
 
 @app.route("/")
 def index():
@@ -19,17 +21,20 @@ def index():
     ]
     image_urls = [url_for("static", filename=f"{IMAGE_DIR}/{f}") for f in images]
     data["image_urls"] = image_urls
-    data["categories"] = categories()
+    data["labels"] = get_labels()
     return render_template("index.html", data=data)
 
 
-@app.route("/get-categories")
-def categories():
-    # TODO needs to select the one that has been set in file.. not first in html
-    with app.open_resource(f"{RESOURCE_DIR}/categories.json") as f:
-        categories = json.loads(f.read())
-        # logging.info(categories)
-    return categories
+@app.route("/update-labels")
+def update_labels():
+    pass
+
+
+@app.route("/get-label")
+def get_labels():
+    with app.open_resource(f"{RESOURCE_DIR}/{LABELS_FILENAME}") as f:
+        labels = json.loads(f.read())
+    return labels
 
 
 @app.route("/get_image_info/<image_name>")
