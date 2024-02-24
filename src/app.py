@@ -21,7 +21,7 @@ def index():
     ]
     image_urls = [url_for("static", filename=f"{IMAGE_DIR}/{f}") for f in images]
     data["image_urls"] = image_urls
-    data["labels"] = get_labels()
+    data["labels"] = get_labels(image_urls)
     return render_template("index.html", data=data)
 
 
@@ -30,10 +30,14 @@ def update_labels():
     pass
 
 
-@app.route("/get-label")
-def get_labels():
+def get_labels(image_urls):
     with app.open_resource(f"{RESOURCE_DIR}/{LABELS_FILENAME}") as f:
         labels = json.loads(f.read())
+        labels["images"] = labels.get("images", {})
+        for url in image_urls:
+            labels["images"][url] = labels["images"].get(url, labels["types"][0])
+
+        print(labels)
     return labels
 
 
