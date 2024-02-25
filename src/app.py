@@ -25,9 +25,11 @@ def index():
     return render_template("index.html", data=data)
 
 
-@app.route("/update-labels")
+@app.route("/update-labels", methods=["POST"])
 def update_labels():
-    pass
+    print("HIHIHIHIHIHI")
+    resp = jsonify(success=True)
+    return resp
 
 
 def get_labels(image_urls):
